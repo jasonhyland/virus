@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<title>C19 Sim</title>
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="sketch2.js"></script>
+</head>
+<body>
+<div class="container-fluid">
+	<h1 id="simTitle">C19 Simulation</h1>
+	<div class="row">
+	  <div class="col-sm-2">
+	    <div id="stats">
+			<form class="form-horizontal small">
+			  <div class="form-group">
+				<label for="stats-population">Population Size</label>
+				<h3 id="stats-population">0</h3>
+			  </div>
+			  <div class="form-group">
+				<label for="stats-infected">Infected</label>
+				<h3 id="stats-infected">0</h3>
+			  </div>
+			  <div class="form-group">
+				<label for="stats-notinfected">Not Infected</label>
+				<h3 id="stats-notinfected">0</h3>
+			  </div>
+			  <div class="form-group">
+				<label for="stats-immune">Immune</label>
+				<h3 id="stats-immune">0</h3>
+			  </div>
+			  <div class="form-group">
+				<label for="stats-dead">Dead</label>
+				<h3 id="stats-dead">0</h3>
+			  </div>
+			  <div class="form-group">
+				<label for="stats-nhs">NHS Status</label>
+				<h3 id="stats-nhs"></h3>
+			  </div>
+			</form>
+		</div>
+		<div id="params">
+			<form class="form-horizontal small">
+			  <h4>Virus Parameters</h4>
+			  <div class="form-group">
+				<label for="subjectDensity">Starting population density %</label>
+				<input type="text" class="form-control input-sm" id="subjectDensity">
+			  </div>
+			  <div class="form-group">
+				<label for="startingDistributionPercent">% of population that starts with the infection</label>
+				<input type="text" class="form-control" id="startingDistributionPercent">
+			  </div>
+			  <div class="form-group">
+				<label for="infectiousRadius">Infectious radius (in nodes)</label>
+				<input type="text" class="form-control" id="infectiousRadius">
+			  </div>	
+			  <div class="form-group">
+				<label for="minDaysRemainInfectious">Minimum days subjects remain infectious</label>
+				<input type="text" class="form-control" id="minDaysRemainInfectious">
+			  </div>
+			  <div class="form-group">
+				<label for="maxDaysRemainInfectious">Maximum days subjects remain infectious</label>
+				<input type="text" class="form-control" id="maxDaysRemainInfectious">
+			  </div>
+			  <div class="form-group">
+				<label for="transmissionChance">% chance of infection if in contact with infected subject</label>
+				<input type="text" class="form-control" id="transmissionChance">
+			  </div>
+			  <div class="form-group">
+				<label for="deathRate">% Of infected subjects that will die from virus</label>
+				<input type="text" class="form-control" id="deathRate">
+			  </div>	
+			  <div class="form-group">
+				<label for="overWhelm">% Of population infected at same time that will overwhelm the NHS</label>
+				<input type="text" class="form-control" id="overWhelm">
+			  </div>
+			  <div class="form-group">
+				<label for="overWhelmDeathRate">% Death rate when NHS is overwhelmed</label>
+				<input type="text" class="form-control" id="overWhelmDeathRate">
+			  </div>
+			  <div class="form-group">
+				<label for="movers">% of population that move around</label>
+				<input type="text" class="form-control" id="movers">
+			  </div>
+			  <h4>Simulation Parameters</h4>
+			  <div class="form-group">
+				<label for="sim-resolution">Resolution</label>
+				<input type="text" class="form-control" id="sim-resolution">
+			  </div>
+			  <div class="form-group">
+				<label for="sim-width">Width</label>
+				<input type="text" class="form-control" id="sim-width">
+			  </div>
+			  <div class="form-group">
+				<label for="sim-height">Height</label>
+				<input type="text" class="form-control" id="sim-height">
+			  </div>
+			  <div class="form-group">
+				<label for="sim-speed">Days per second speed</label>
+				<input type="text" class="form-control" id="sim-speed">
+			  </div>
+
+			</form>
+	    </div>
+	  
+	  </div>
+	  <div class="col-sm-10">
+		  <div id="sketch-holder"></div>
+		  <button type="button" class="btn btn-primary" id="startButton">Start</button>
+		  <button type="button" class="btn btn-primary" id="statsButton">Show Stats</button>
+		  <button type="button" class="btn btn-info" id="resetButton">Reset Sim & Reread Params</button>
+
+	  </div>
+	</div>
+</div>
+
+
+</body>
+</html>
