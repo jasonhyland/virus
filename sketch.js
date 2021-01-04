@@ -1,20 +1,21 @@
-// C19 by J Hyland
+// Virus sim by Jason
+// Inspiration from Conway game of life....
 
 // Simulation parameters
 
 
 var simParams = {
 	// How dense (%) the population is in sim
-	subjectDensity: 15, 
+	subjectDensity: 25, 
 	// % of starting population infected
-	startingDistributionPercent: 2,
+	startingDistributionPercent: 5,
 	// Range (in grid squares around subject) that subject in infectious 
 	infectiousRadius: 1,
 	// How many days (iterations) subject remains infectious
 	minDaysRemainInfectious: 7,
 	maxDaysRemainInfectious: 21,
 	// % chance of transmission when in contact
-    transmissionChance: 15,
+    transmissionChance: 20,
 	// Death rate of infected population %
 	deathRate: 4,
 	// % of population being infected at same time which would overwhem nhs
@@ -22,7 +23,7 @@ var simParams = {
 	// % of people who would die when in overwhelm mode
 	overWhelmDeathRate: 40,
 	// % of people who move!
-	movers: 25
+	movers: 30
 }
 	
 	
@@ -63,20 +64,13 @@ let cols;
 let rows;
 
 var simSize = { 
-	width: 1300, 
-	height: 700, 
-	resolution: 6, 
-	speed: 7
+	width: 1400, 
+	height: 800, 
+	resolution: 8, 
+	speed: 4
 	}
 
 let day = 0;
-
-//var dayElement;
-//var subjectsElement;
-//var deadElement;
-//var infectedElement;
-//var immuneElement;
-//var notInfectedElement;
 
 var populationSizeControl;
 var infectedControl;
@@ -84,15 +78,6 @@ var notInfectedControl;
 var immuneControl;
 var deadControl;
 var nhsControl;
-
-
-//var countSubjects = 0;
-//var countDead = 0;
-//var countInfected = 0;
-//var countImmune = 0;
-//var countNotInfected = 0;
-
-var input;
 
 var colours = { 
 	background: 'black', 
@@ -147,19 +132,15 @@ class Subject {
 				   return;	
 				}
 			}
-			
 			this.infected = false;
 			this.immune = 1;
-
 		}
-		
 	}
 	
 	loop()
 	{
 		if (this.infected && !this.dead)
 		{
-			
 			this.daysAtRisk++;
 			if (this.daysAtRisk >= simParams.maxDaysRemainInfectious) 
 			{
@@ -277,10 +258,6 @@ function updateSimParams()
 }
 
 function setup() {
-  //createDiv();
-  //var canvas = createCanvas(simSize.width, simSize.height);
-  //canvas.parent('sketch-holder');
-  //background(colours.background);
   
   updateSimParams();
 
@@ -297,22 +274,6 @@ function setup() {
   immuneControl = select('#stats-immune');
   nhsControl = select('#stats-nhs');
   
-  //frameRate(7); // 1 frame per second
-  /*
-  dayElement = createElement('h2','Day 0');
-  subjectsElement = createElement('p','Total Subjects : 0');
-  deadElement = createElement('p','Total Dead : 0');
-  infectedElement = createElement('p','Total Infected : 0');
-  immuneElement = createElement('p','Total Immune : 0');
-  notInfectedElement = createElement('p','Total Not Infected : 0');
-  
-  
-  var reset = createButton("reset");
-  reset.mousePressed(resetSketch);
-  
-  var start = createButton("start");
-  start.mousePressed(startSketch);
-  */
   var startButton = select("#startButton");
   startButton.mousePressed(startSketch);
   
@@ -323,19 +284,14 @@ function setup() {
   statsButtonControl.mousePressed(toggleDisplay);
 
   init();
-  noLoop();
-
-  
+  noLoop(); 
 
 }
 
 function startSketch()
 {
-	// Get cvars
 	init();
 	toggleDisplay();
-	//paramsDiv.hide();
-	//statsDiv.show();
 	var startButton = select("#startButton");
 	startButton.attribute('disabled', '');
 	loop();
@@ -353,8 +309,6 @@ function init()
 	day = 0;
 	cols = floor(width / simSize.resolution);
 	rows = floor(height / simSize.resolution);
-
-	
 
 	grid = makeArray(cols, rows);
 	for (let i = 0; i < cols; i++) {
@@ -407,7 +361,6 @@ function zeroStats()
 	statistics.immune = 0;
 	statistics.dead = 0;
 	statistics.nhs = 'Coping';
-	
 }
 
 function displayStats()
@@ -429,7 +382,8 @@ function calculateStats()
       for (let j = 0; j < rows; j++) {
 		  if (grid[i][j] != undefined)
 		  {
-			  if (grid[i][j].dead)
+			statistics.populationSize++;
+			if (grid[i][j].dead)
 			  {
 				statistics.dead++;
 				continue;
@@ -438,13 +392,14 @@ function calculateStats()
 			  {
 				  statistics.infected++;
 			  } else {
-				  statistics.notinfected++;
+				  if (!grid[i][j].immune)
+				  	statistics.notinfected++;
 			  }
 			  if (grid[i][j].immune)
 			  {
 				  statistics.immune++;
 			  }
-			  statistics.populationSize++;
+			  
 		  }
 	  }
 	}
@@ -479,8 +434,11 @@ function draw() {
 	  
 	  fill(fillType);
 	  stroke(0);
-      rect(x, y, simSize.resolution - 1, simSize.resolution - 1);
-	  
+	  if (subject.dead) 
+		  rect(x, y, simSize.resolution - 1, simSize.resolution - 1);
+	  else
+	  	circle(x,y,simSize.resolution-1);
+
 	  
     }
   }
@@ -563,22 +521,12 @@ function draw() {
   calculateStats();
   displayStats();
 
-  simTitleControl.html("C19 Simulation - Day " + day);
+  simTitleControl.html("Virus Simulation - Day " + day);
 
-
-/*
-  dayElement.html("Day " + day);
-  subjectsElement.html("Total Subjects : " + countSubjects);
-  deadElement.html("Total Dead : " + countDead + " - " + round(((countDead / countSubjects) * 100),3) + "%");
-  
-  infectedElement.html("Total Infected : " + countInfected + ow);
-  immuneElement.html("Total Immune : " + countImmune);
-  notInfectedElement.html("Total Not Infected : " + countNotInfected);
-  */
   if (statistics.infected <= 0)
   {
 	  //dayElement.html("Day " + day + " - outbreak over");
-	  simTitleControl.html("C19 Simulation - Day " + day + " - outbreak over");
+	  simTitleControl.html("Virus Simulation - Day " + day + " - outbreak over");
 	  noLoop();
   } else {
     day++;

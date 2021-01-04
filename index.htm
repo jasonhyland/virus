@@ -5,7 +5,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-	<title>C19 Sim</title>
+	<title>Virus Sim 1.0</title>
 	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.min.js"></script>
 	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
 	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
@@ -14,7 +14,7 @@
 </head>
 <body>
 <div class="container-fluid">
-	<h1 id="simTitle">C19 Simulation</h1>
+	<h1 id="simTitle">Virus Simulator</h1>
 	<div class="row">
 	  <div class="col-sm-2">
 	    <div id="stats">
@@ -28,7 +28,7 @@
 				<h3 id="stats-infected">0</h3>
 			  </div>
 			  <div class="form-group">
-				<label for="stats-notinfected">Not Infected</label>
+				<label for="stats-notinfected">Never Infected</label>
 				<h3 id="stats-notinfected">0</h3>
 			  </div>
 			  <div class="form-group">
@@ -90,7 +90,7 @@
 			  </div>
 			  <h4>Simulation Parameters</h4>
 			  <div class="form-group">
-				<label for="sim-resolution">Resolution</label>
+				<label for="sim-resolution">Individual cell resolution (3-15)</label>
 				<input type="text" class="form-control" id="sim-resolution">
 			  </div>
 			  <div class="form-group">
@@ -115,7 +115,14 @@
 		  <button type="button" class="btn btn-primary" id="startButton">Start</button>
 		  <button type="button" class="btn btn-primary" id="statsButton">Show Stats</button>
 		  <button type="button" class="btn btn-info" id="resetButton">Reset Sim & Reread Params</button>
-
+		  <p></p>
+		  <div style="background-color:black" class="col-sm-1">
+			  <span style="background-color:green; color:white">Not infected</span>
+			  <span style="background-color:red; color:white">Infected</span>
+			  <span style="background-color:blue; color:white">Immune</span>
+			  <span style="background-color:white">Dead</span>
+		  </div>
+		  <div>Please don't take this sim too seriously - I put it together in a few hours one bored Sunday afternoon. </div>
 	  </div>
 	</div>
 </div>
